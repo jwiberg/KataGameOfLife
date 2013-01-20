@@ -1,4 +1,5 @@
 import org.junit.Test;
+import sun.org.mozilla.javascript.internal.ast.Yield;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -10,55 +11,77 @@ import static org.junit.Assert.assertArrayEquals;
 
 public class GameOfLifeTest {
 
-    @Test
-    public void zeroLiveCellsShouldGenerateZeroLiveCells() {
+    @Test(expected = Extinction.class)
+    public void zeroLiveCellsShouldGenerateZeroLiveCells() throws Exception {
         String[][] oldGeneration = {};
-        String[][] newGeneration = generateNextGeneration(oldGeneration);
-        assertArrayEquals(new String[0][0], newGeneration);
+        generateNextGeneration(oldGeneration);
     }
 
-    @Test
-    public void oneLiveCellsWithoutNeighboursShouldGenerateNoLiveCells() {
+    @Test(expected = Extinction.class)
+    public void oneLiveCellsWithoutNeighboursShouldGenerateNoLiveCells() throws Exception {
         String[][] oldGeneration = {{"*"}};
-        String[][] newGeneration = generateNextGeneration(oldGeneration);
-        assertArrayEquals(new String[][]{{"."}}, newGeneration);
+        generateNextGeneration(oldGeneration);
     }
 
-   @Test
-    public void twoLiveCellsReturnsNoLiveCells() {
-        String[][] oldGeneration = {{"*","*"}};
-        String[][] newGeneration = generateNextGeneration(oldGeneration);
-        assertArrayEquals(new String[][]{{".","."}}, newGeneration);
+    @Test(expected = Extinction.class)
+    public void twoLiveCellsReturnsNoLiveCells() throws Exception {
+        String[][] oldGeneration = {{"*", "*"}};
+        generateNextGeneration(oldGeneration);
+    }
+
+    @Test(expected = Extinction.class)
+    public void oneLiveCellIn2x2GridShouldGenerateNoLiveCells() throws Exception {
+        String[][] oldGeneration = {{"*", "."}, {".", "."}};
+        generateNextGeneration(oldGeneration);
+    }
+
+    @Test(expected = Extinction.class)
+    public void twoLiveCellIn2x2GridShouldGenerateNoLiveCells() throws Exception {
+        String[][] oldGeneration = {{"*", "."}, {".", "*"}};
+        generateNextGeneration(oldGeneration);
     }
 
 /*
-    @Test
-    public void oneLiveCellIn2x2GridShouldGenerateNoLiveCells() {
-        String[][] oldGeneration = {{"*","."},{".","."}};
-        String[][] newGeneration = generateNextGeneration(oldGeneration);
-        assertArrayEquals(new String[][]{{".","."},{".","."}}, newGeneration);
-    }
-
-    @Test
-    public void twoLiveCellIn2x2GridShouldGenerateNoLiveCells() {
-        String[][] oldGeneration = {{"*","."},{".","*"}};
-        String[][] newGeneration = generateNextGeneration(oldGeneration);
-        assertArrayEquals(new String[][]{{".","."},{".","."}}, newGeneration);
+    @Test(expected = Extinction.class)
+    public void threeLiveCellIn3x3GridShouldGenerateNoLiveCells() throws Exception {
+        String[][] oldGeneration = {{"*", ".","*"}, {".", ".","."}, {".", ".","*"}};
+        visualizeGeneration(oldGeneration);
+        generateNextGeneration(oldGeneration);
     }
 */
 
-    private String[][] generateNextGeneration(String[][] oldGeneration) {
+    private String[][] generateNextGeneration(String[][] oldGeneration) throws Extinction {
         String[][] newGeneration = null;
-        //Couple of special cases
-        if(oldGeneration.length == 0) {
-            newGeneration = new String[oldGeneration.length][0];
-        }else if(oldGeneration.length == 1 && oldGeneration[0].length < 3) {
-            newGeneration = new String[oldGeneration.length][oldGeneration[0].length];
-            for(int i = 0; i < oldGeneration[0].length; i++) {
-                newGeneration[0][i] = ".";
-            }
+
+        if (isExtinction(oldGeneration)) {
+            throw new Extinction();
         }
+
         return newGeneration;
     }
 
+    private void visualizeGeneration(String[][] generation) {
+        for(int x = 0; x < generation.length; x++) {
+            for(int y = 0; y < generation[x].length; y++) {
+                System.out.print(generation[x][y]);
+            }
+            System.out.print("\n");
+        }
+    }
+
+    private boolean isExtinction(String[][] generation) {
+        int countOfLiveCells = 0;
+        for (int x = 0; x < generation.length; x++) {
+            for (int y = 0; y < generation[x].length; y++) {
+                if (generation[x][y].equals("*")) {
+                    countOfLiveCells++;
+                }
+            }
+        }
+        return countOfLiveCells < 3;
+    }
+
+    private class Extinction extends Exception {
+
+    }
 }
