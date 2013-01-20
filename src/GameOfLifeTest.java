@@ -55,7 +55,7 @@ public class GameOfLifeTest {
         assertEquals("*", newGeneration[0][0]);
     }
 
-/*    @Test
+    @Test
     public void liveCellInTopRightCornerWithTwoNeighboursShouldLive() throws Exception {
         String[][] oldGeneration = {{".", ".", "."}, {".", "*", "."}, {"*", "*", "."}};
         visualize(oldGeneration);
@@ -69,10 +69,9 @@ public class GameOfLifeTest {
         visualize(oldGeneration);
         String[][] newGeneration = generateNextGeneration(oldGeneration);
         assertEquals("*", newGeneration[2][0]);
-    }*/
+    }
 
     private String[][] generateNextGeneration(String[][] oldGeneration) throws Extinction {
-
         if (isExtinction(oldGeneration)) {
             throw new Extinction();
         }
@@ -84,7 +83,10 @@ public class GameOfLifeTest {
                 int countOfNeighbours = 0;
                 if (isTopLeftCorner(x, y)) {
                     countOfNeighbours = countTopLeftCornerNeighbours(oldGeneration);
+                } else if (isTopRightCorner(oldGeneration, x, y)) {
+                    countOfNeighbours = countTopRightCornerNeighbours(oldGeneration);
                 }
+
                 if (isFertile(countOfNeighbours, oldGeneration[x][y])
                         || isNewborn(countOfNeighbours, oldGeneration[x][y])) {
                     newGeneration[x][y] = "*";
@@ -97,18 +99,36 @@ public class GameOfLifeTest {
         return newGeneration;
     }
 
-    private int countTopLeftCornerNeighbours(String[][] oldGeneration) {
+    private int countTopRightCornerNeighbours(String[][] oldGeneration) {
         int countOfNeighbours = 0;
-        if (oldGeneration[1][0].equals("*")) {
+        if (isLiveCell(oldGeneration[oldGeneration.length - 2][0])) {
             countOfNeighbours++;
         }
-        if (oldGeneration[1][1].equals("*")) {
+        if (isLiveCell(oldGeneration[oldGeneration.length - 2][1])) {
             countOfNeighbours++;
         }
-        if (oldGeneration[0][1].equals("*")) {
+        if (isLiveCell(oldGeneration[oldGeneration.length - 1][1])) {
             countOfNeighbours++;
         }
         return countOfNeighbours;
+    }
+
+    private int countTopLeftCornerNeighbours(String[][] oldGeneration) {
+        int countOfNeighbours = 0;
+        if (isLiveCell(oldGeneration[1][0])) {
+            countOfNeighbours++;
+        }
+        if (isLiveCell(oldGeneration[1][1])) {
+            countOfNeighbours++;
+        }
+        if (isLiveCell(oldGeneration[0][1])) {
+            countOfNeighbours++;
+        }
+        return countOfNeighbours;
+    }
+
+    private boolean isLiveCell(String cell) {
+        return cell.equals("*");
     }
 
     private boolean isTopLeftCorner(int x, int y) {
@@ -124,14 +144,14 @@ public class GameOfLifeTest {
     }
 
     private boolean isFertile(int countOfNeighbours, String oldCell) {
-        return oldCell.equals("*") && (countOfNeighbours == 2 || countOfNeighbours == 3);
+        return isLiveCell(oldCell) && (countOfNeighbours == 2 || countOfNeighbours == 3);
     }
 
     private boolean isExtinction(String[][] generation) {
         int countOfLiveCells = 0;
         for (int x = 0; x < generation.length; x++) {
             for (int y = 0; y < generation[x].length; y++) {
-                if (generation[x][y].equals("*")) {
+                if (isLiveCell(generation[x][y])) {
                     countOfLiveCells++;
                 }
             }
@@ -139,7 +159,8 @@ public class GameOfLifeTest {
         return countOfLiveCells < 3;
     }
 
-    private class Extinction extends Exception {}
+    private class Extinction extends Exception {
+    }
 
     //Debug method, remove
     public void visualize(String[][] generation) {
