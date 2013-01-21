@@ -1,8 +1,6 @@
 package katagameoflife.test.util;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 /**
@@ -12,15 +10,14 @@ import java.io.FileReader;
  */
 public class TestDataReader {
     public static String[][] readTestGenerationByTestName(String testName, int sideLenght, String filePath) {
-        try {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))){
             String[][] testGeneration = new String[sideLenght][sideLenght];
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
             String line;
-            while((line = br.readLine()) != null) {
-                if(line.trim().equals(testName)) {
-                    for(int y = 0; y < sideLenght; y++) {
+            while ((line = br.readLine()) != null) {
+                if (line.trim().equals(testName)) {
+                    for (int y = 0; y < sideLenght; y++) {
                         char[] dataLine = br.readLine().toCharArray();
-                        for(int x = 0; x < sideLenght; x++) {
+                        for (int x = 0; x < sideLenght; x++) {
                             testGeneration[x][y] = dataLine[x] + "";
                         }
                     }

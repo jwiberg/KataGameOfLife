@@ -14,6 +14,8 @@ import static org.junit.Assert.assertEquals;
 
 public class GameOfLifeTest {
 
+    public static final String TESTDATA_FILE_PATH = "testdata/testdata.txt";
+
     @Test(expected = GameOfLife.TooSmallWorld.class)
     public void zeroLiveCellsShouldGenerateZeroLiveCells() throws Exception {
         String[][] oldGeneration = {};
@@ -40,7 +42,7 @@ public class GameOfLifeTest {
 
     @Test
     public void liveCellInTopLeftCornerWithTwoNeighboursShouldLive() throws Exception {
-        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellInTopLeftCornerWithTwoNeighboursShouldLive", 3, "testdata/testdata.txt");
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellInTopLeftCornerWithTwoNeighboursShouldLive", 3, TESTDATA_FILE_PATH);
         visualize(oldGeneration);
         String[][] newGeneration = generateNextGeneration(oldGeneration);
         assertEquals("*", newGeneration[0][0]);
@@ -48,7 +50,7 @@ public class GameOfLifeTest {
 
     @Test
     public void liveCellInTopLeftCornerWithThreeNeighboursShouldLive() throws Exception {
-        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellInTopLeftCornerWithThreeNeighboursShouldLive", 3, "testdata/testdata.txt");
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellInTopLeftCornerWithThreeNeighboursShouldLive", 3, TESTDATA_FILE_PATH);
         visualize(oldGeneration);
         String[][] newGeneration = generateNextGeneration(oldGeneration);
         assertEquals("*", newGeneration[0][0]);
@@ -112,11 +114,7 @@ public class GameOfLifeTest {
 
     @Test
     public void liveCellAtMiddleOfTopSideShouldDieIfNoNeighbours() throws Exception {
-        String[][] oldGeneration = {{"*", "*", ".", "*", "."}
-                , {"*", ".", ".", ".", "*"}
-                , {"*", ".", ".", ".", "."}
-                , {".", ".", ".", "*", "."}
-                , {".", ".", ".", ".", "."}};
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellAtMiddleOfTopSideShouldDieIfNoNeighbours",5, TESTDATA_FILE_PATH);
         visualize(oldGeneration);
         String[][] newGeneration = generateNextGeneration(oldGeneration);
         visualize(newGeneration);
