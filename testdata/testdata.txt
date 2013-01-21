@@ -1,0 +1,8 @@
+liveCellInTopLeftCornerWithTwoNeighboursShouldLive
+*..
+**.
+...
+liveCellInTopLeftCornerWithThreeNeighboursShouldLive
+**.
+**.
+...

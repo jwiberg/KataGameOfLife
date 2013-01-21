@@ -1,6 +1,7 @@
 package katagameoflife;
 
 import katagameoflife.GameOfLife;
+import katagameoflife.test.util.TestDataReader;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -39,14 +40,16 @@ public class GameOfLifeTest {
 
     @Test
     public void liveCellInTopLeftCornerWithTwoNeighboursShouldLive() throws Exception {
-        String[][] oldGeneration = {{"*", ".", "."}, {"*", "*", "."}, {".", ".", "."}};
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellInTopLeftCornerWithTwoNeighboursShouldLive", 3, "testdata/testdata.txt");
+        visualize(oldGeneration);
         String[][] newGeneration = generateNextGeneration(oldGeneration);
         assertEquals("*", newGeneration[0][0]);
     }
 
     @Test
     public void liveCellInTopLeftCornerWithThreeNeighboursShouldLive() throws Exception {
-        String[][] oldGeneration = {{"*", "*", "."}, {"*", "*", "."}, {".", ".", "."}};
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellInTopLeftCornerWithThreeNeighboursShouldLive", 3, "testdata/testdata.txt");
+        visualize(oldGeneration);
         String[][] newGeneration = generateNextGeneration(oldGeneration);
         assertEquals("*", newGeneration[0][0]);
     }
@@ -110,10 +113,10 @@ public class GameOfLifeTest {
     @Test
     public void liveCellAtMiddleOfTopSideShouldDieIfNoNeighbours() throws Exception {
         String[][] oldGeneration = {{"*", "*", ".", "*", "."}
-                                 , {"*", ".", ".", ".", "*"}
-                                 , {"*", ".", ".", ".", "."}
-                                 , {".", ".", ".", "*", "."}
-                                 , {".", ".", ".", ".", "."}};
+                , {"*", ".", ".", ".", "*"}
+                , {"*", ".", ".", ".", "."}
+                , {".", ".", ".", "*", "."}
+                , {".", ".", ".", ".", "."}};
         visualize(oldGeneration);
         String[][] newGeneration = generateNextGeneration(oldGeneration);
         visualize(newGeneration);
@@ -121,7 +124,7 @@ public class GameOfLifeTest {
     }
 
     @Test
-         public void liveCellAtMiddleOfTopSideShouldLiveWithTwoNeighbours() throws Exception {
+    public void liveCellAtMiddleOfTopSideShouldLiveWithTwoNeighbours() throws Exception {
         String[][] oldGeneration = {{".", ".", ".", "*", "."}
                 , {"*", ".", ".", ".", "*"}
                 , {"*", ".", ".", ".", "."}
