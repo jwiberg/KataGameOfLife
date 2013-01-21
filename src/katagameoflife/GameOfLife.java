@@ -234,4 +234,5 @@ public class GameOfLife {
 
     public class TooSmallWorld extends Exception {
     }
+
 }

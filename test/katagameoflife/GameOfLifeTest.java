@@ -219,7 +219,7 @@ public class GameOfLifeTest {
     }
 
     //Debug method, remove
-    private void visualize(String[][] generation) {
+    private static void visualize(String[][] generation) {
         System.out.print("\n");
         for (int y = 0; y < generation[0].length; y++) {
             for (int x = 0; x < generation.length; x++) {
@@ -228,5 +228,19 @@ public class GameOfLifeTest {
             System.out.print("\n");
         }
         System.out.print("\n");
+    }
+
+    public static void main(String args[]) {
+        GameOfLife gameOfLife = new GameOfLife();
+        String[][] generation = TestDataReader.readTestGenerationByTestName("testBlinker", 5, TESTDATA_FILE_PATH);
+        while(true) {
+            visualize(generation);
+            try {
+                Thread.sleep(2000);
+                generation = gameOfLife.generateNextGeneration(generation);
+            } catch (Exception e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
     }
 }
