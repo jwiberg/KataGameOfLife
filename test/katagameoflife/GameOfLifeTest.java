@@ -170,6 +170,39 @@ public class GameOfLifeTest {
         assertEquals(".", newGeneration[0][2]);
     }
 
+    @Test
+    public void liveCellAtMiddleOfRightSideShouldLiveWithTwoNeighbours() throws Exception {
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellAtMiddleOfRightSideShouldLiveWithTwoNeighbours", 5, TESTDATA_FILE_PATH);
+        visualize(oldGeneration);
+        String[][] newGeneration = generateNextGeneration(oldGeneration);
+        visualize(newGeneration);
+        assertEquals("*", newGeneration[4][2]);
+    }
+
+    @Test
+    public void liveCellAtMiddleOfRightSideShouldDieWithOneNeighbours() throws Exception {
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellAtMiddleOfRightSideShouldDieWithOneNeighbours", 5, TESTDATA_FILE_PATH);
+        visualize(oldGeneration);
+        String[][] newGeneration = generateNextGeneration(oldGeneration);
+        visualize(newGeneration);
+        assertEquals(".", newGeneration[4][2]);
+    }
+
+    @Test
+    public void loafShouldStayLoaf() throws Exception {
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("loafShouldStayLoaf", 6, TESTDATA_FILE_PATH);
+        visualize(oldGeneration);
+        String[][] newGeneration = generateNextGeneration(oldGeneration);
+        visualize(newGeneration);
+        assertEquals("*", newGeneration[2][1]);
+        assertEquals("*", newGeneration[3][1]);
+        assertEquals("*", newGeneration[1][2]);
+        assertEquals("*", newGeneration[4][2]);
+        assertEquals("*", newGeneration[2][3]);
+        assertEquals("*", newGeneration[4][3]);
+        assertEquals("*", newGeneration[3][4]);
+    }
+
     private String[][] generateNextGeneration(String[][] oldGeneration) throws Exception {
         return new GameOfLife().generateNextGeneration(oldGeneration);
     }

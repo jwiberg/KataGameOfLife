@@ -24,17 +24,38 @@ public class GameOfLife {
         checkTopSide(oldGeneration, newGeneration);
         checkDownSide(oldGeneration, newGeneration);
         checkLeftSide(oldGeneration, newGeneration);
+        checkRightSide(oldGeneration, newGeneration);
 
-
-        for (int x = 0; x < oldGeneration.length; x++) {
-            for (int y = 0; y < oldGeneration[x].length; y++) {
-                if (isCorner(oldGeneration, x, y)) {
-                    continue;
-                }
+        for (int x = 1; x < oldGeneration.length -1; x++) {
+            for (int y = 1; y < oldGeneration[x].length - 1; y++) {
+                    Set<Coordinate> coordinates = new HashSet<>();
+                    coordinates.add(new Coordinate(x, y - 1));
+                    coordinates.add(new Coordinate(x+1, y - 1));
+                    coordinates.add(new Coordinate(x+1, y));
+                    coordinates.add(new Coordinate(x+1, y + 1 ));
+                    coordinates.add(new Coordinate(x, y + 1));
+                    coordinates.add(new Coordinate(x - 1, y + 1));
+                    coordinates.add(new Coordinate(x - 1, y));
+                    coordinates.add(new Coordinate(x - 1, y - 1));
+                    int liveCells = countLiveCells(coordinates, oldGeneration);
+                    newGeneration[x][y] = getLiveOrDeadCell(liveCells, oldGeneration[x][y]);
             }
         }
 
         return newGeneration;
+    }
+
+    private void checkRightSide(String[][] oldGeneration, String[][] newGeneration) {
+        for (int y = 1; y < newGeneration[0].length - 1; y++) {
+            Set<Coordinate> coordinates = new HashSet<>();
+            coordinates.add(new Coordinate(newGeneration.length-1, y - 1));
+            coordinates.add(new Coordinate(newGeneration.length-2, y - 1));
+            coordinates.add(new Coordinate(newGeneration.length-2, y));
+            coordinates.add(new Coordinate(newGeneration.length-2, y + 1));
+            coordinates.add(new Coordinate(newGeneration.length-1, y + 1));
+            int liveCells = countLiveCells(coordinates, oldGeneration);
+            newGeneration[newGeneration.length-1][y] = getLiveOrDeadCell(liveCells, oldGeneration[newGeneration.length-1][y]);
+        }
     }
 
     private void checkLeftSide(String[][] oldGeneration, String[][] newGeneration) {
@@ -123,29 +144,6 @@ public class GameOfLife {
             }
         }
         return countOfLiveCells;
-    }
-
-    private boolean isCorner(String[][] oldGeneration, int x, int y) {
-        return isTopLeftCorner(x, y)
-                || isTopRightCorner(oldGeneration, x, y)
-                || isDownRightCorner(oldGeneration, x, y)
-                || isDownLeftCorner(oldGeneration, x, y);
-    }
-
-    private boolean isTopLeftCorner(int x, int y) {
-        return x == 0 && y == 0;
-    }
-
-    private boolean isTopRightCorner(String[][] oldGeneration, int x, int y) {
-        return (x == oldGeneration.length - 1) && y == 0;
-    }
-
-    private boolean isDownRightCorner(String[][] oldGeneration, int x, int y) {
-        return (x == oldGeneration.length - 1) && (y == oldGeneration[oldGeneration.length - 1].length - 1);
-    }
-
-    private boolean isDownLeftCorner(String[][] oldGeneration, int x, int y) {
-        return x == 0 && (y == oldGeneration[0].length - 1);
     }
 
     private boolean isNewborn(int countOfNeighbours, String oldCell) {
