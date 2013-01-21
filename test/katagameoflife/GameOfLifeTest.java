@@ -1,7 +1,8 @@
-import org.junit.Ignore;
+package katagameoflife;
+
+import katagameoflife.GameOfLife;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -120,16 +121,29 @@ public class GameOfLifeTest {
     }
 
     @Test
-    public void liveCellAtMiddleOfTopSideShouldLiveWithTwoNeighbours() throws Exception {
+         public void liveCellAtMiddleOfTopSideShouldLiveWithTwoNeighbours() throws Exception {
         String[][] oldGeneration = {{".", ".", ".", "*", "."}
-                                    , {"*", ".", ".", ".", "*"}
-                                    , {"*", ".", ".", ".", "."}
-                                    , {"*", ".", ".", "*", "."}
-                                    , {".", ".", ".", ".", "."}};
-                            visualize(oldGeneration);
+                , {"*", ".", ".", ".", "*"}
+                , {"*", ".", ".", ".", "."}
+                , {"*", ".", ".", "*", "."}
+                , {".", ".", ".", ".", "."}};
+        visualize(oldGeneration);
         String[][] newGeneration = generateNextGeneration(oldGeneration);
         visualize(newGeneration);
         assertEquals("*", newGeneration[2][0]);
+    }
+
+    @Test
+    public void liveCellAtMiddleOfDwonSideShouldLiveWithTwoNeighbours() throws Exception {
+        String[][] oldGeneration = {{".", ".", ".", ".", "."}
+                , {"*", ".", ".", ".", "*"}
+                , {"*", ".", ".", ".", "*"}
+                , {"*", ".", ".", ".", "*"}
+                , {".", ".", ".", ".", "."}};
+        visualize(oldGeneration);
+        String[][] newGeneration = generateNextGeneration(oldGeneration);
+        visualize(newGeneration);
+        assertEquals("*", newGeneration[2][4]);
     }
 
     private String[][] generateNextGeneration(String[][] oldGeneration) throws Exception {
