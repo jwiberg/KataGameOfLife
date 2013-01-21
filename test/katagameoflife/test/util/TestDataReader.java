@@ -6,4 +6,7 @@ package katagameoflife.test.util;
  * Time: 15:41
  */
 public class TestDataReader {
+    public static String[] readTestDataByTestName(String testName) {
+        return null;
+    }
 }
