@@ -8,34 +8,54 @@ import java.util.Set;
  */
 public class GameOfLife {
 
-    public String[][] generateNextGeneration(String[][] oldGeneration) throws Extinction {
+    public String[][] generateNextGeneration(String[][] oldGeneration) throws Extinction, TooSmallWorld {
+        if(isTooSmallWorld(oldGeneration)) {
+            throw new TooSmallWorld();
+        }
+
         if (isExtinction(oldGeneration)) {
             throw new Extinction();
         }
 
-        String[][] newGeneration = new String[oldGeneration.length][oldGeneration[0].length];
+        //Pitääkö tuo uusi generaatio luoda tuolla metodin sisällä?
+        String[][] newGeneration = getEmptyNewGeneration(oldGeneration);
 
         checkCorners(oldGeneration, newGeneration);
+        checkTopSide(oldGeneration, newGeneration);
 
-        for (int x = 0; x < oldGeneration.length; x++) {
-            for (int y = 0; y < oldGeneration[x].length; y++) {
-                if (isCorner(oldGeneration, x, y)) {
-                    continue;
-                }
-            }
-        }
+
+//        for (int x = 0; x < oldGeneration.length; x++) {
+//            for (int y = 0; y < oldGeneration[x].length; y++) {
+//                if (isCorner(oldGeneration, x, y)) {
+//                    continue;
+//                }
+//            }
+//        }
 
         return newGeneration;
     }
 
-    private void checkCorners(String[][] oldGeneration, String[][] newGeneration) {
-        newGeneration[0][0] = getLiveOrDeadCell(countTopLeftCornerNeighbours(oldGeneration), oldGeneration[0][0]);
-        newGeneration[oldGeneration.length - 1][0] = getLiveOrDeadCell(countTopRightCornerNeighbours(oldGeneration), oldGeneration[oldGeneration.length - 1][0]);
-        newGeneration[oldGeneration.length - 1][oldGeneration[oldGeneration.length - 1].length - 1] = getLiveOrDeadCell(countDownRightCornerNeighbours(oldGeneration), oldGeneration[oldGeneration.length - 1][oldGeneration[oldGeneration.length - 1].length - 1]);
-        newGeneration[0][oldGeneration[0].length - 1] = getLiveOrDeadCell(countDownLeftCornerNeighbours(oldGeneration), oldGeneration[0][oldGeneration[0].length - 1]);
+    private void checkTopSide(String[][] oldGeneration, String[][] newGeneration) {
+        for(int x = 1; x < newGeneration.length - 1; x++) {
+            Set<Coordinate> coordinates = new HashSet<>();
+            coordinates.add(new Coordinate(x+1, 0));
+            coordinates.add(new Coordinate(x+1, 1));
+            coordinates.add(new Coordinate(x, 1));
+            coordinates.add(new Coordinate(x-1, 1));
+            coordinates.add(new Coordinate(x-1, 0));
+            int liveCells = countLiveCells(coordinates, oldGeneration);
+            newGeneration[x][0] = getLiveOrDeadCell(liveCells, oldGeneration[x][0]);
+        }
     }
 
-    private int countDownRightCornerNeighbours(String[][] oldGeneration) {
+    private void checkCorners(String[][] oldGeneration, String[][] newGeneration) {
+        newGeneration[0][0] = getLiveOrDeadCell(countTopLeftCornerLiveNeighbours(oldGeneration), oldGeneration[0][0]);
+        newGeneration[oldGeneration.length - 1][0] = getLiveOrDeadCell(countTopRightCornerLiveNeighbours(oldGeneration), oldGeneration[oldGeneration.length - 1][0]);
+        newGeneration[oldGeneration.length - 1][oldGeneration[oldGeneration.length - 1].length - 1] = getLiveOrDeadCell(countDownRightCornerLiveNeighbours(oldGeneration), oldGeneration[oldGeneration.length - 1][oldGeneration[oldGeneration.length - 1].length - 1]);
+        newGeneration[0][oldGeneration[0].length - 1] = getLiveOrDeadCell(countDownLeftCornerLiveNeighbours(oldGeneration), oldGeneration[0][oldGeneration[0].length - 1]);
+    }
+
+    private int countDownRightCornerLiveNeighbours(String[][] oldGeneration) {
         Set<Coordinate> coordinates = new HashSet<>();
         coordinates.add(new Coordinate(oldGeneration.length - 2, oldGeneration[oldGeneration.length - 2].length - 1));
         coordinates.add(new Coordinate(oldGeneration.length - 2, oldGeneration[oldGeneration.length - 2].length - 2));
@@ -43,7 +63,7 @@ public class GameOfLife {
         return countLiveCells(coordinates, oldGeneration);
     }
 
-    private int countTopRightCornerNeighbours(String[][] oldGeneration) {
+    private int countTopRightCornerLiveNeighbours(String[][] oldGeneration) {
         Set<Coordinate> coordinates = new HashSet<>();
         coordinates.add(new Coordinate(oldGeneration.length - 2, 0));
         coordinates.add(new Coordinate(oldGeneration.length - 2, 1));
@@ -51,7 +71,7 @@ public class GameOfLife {
         return countLiveCells(coordinates, oldGeneration);
     }
 
-    private int countTopLeftCornerNeighbours(String[][] oldGeneration) {
+    private int countTopLeftCornerLiveNeighbours(String[][] oldGeneration) {
         Set<Coordinate> coordinates = new HashSet<>();
         coordinates.add(new Coordinate(1, 0));
         coordinates.add(new Coordinate(1, 1));
@@ -59,7 +79,7 @@ public class GameOfLife {
         return countLiveCells(coordinates, oldGeneration);
     }
 
-    private int countDownLeftCornerNeighbours(String[][] oldGeneration) {
+    private int countDownLeftCornerLiveNeighbours(String[][] oldGeneration) {
         Set<Coordinate> coordinates = new HashSet<>();
         coordinates.add(new Coordinate(0, oldGeneration[0].length - 2));
         coordinates.add(new Coordinate(1, oldGeneration[1].length - 2));
@@ -69,8 +89,8 @@ public class GameOfLife {
 
     private int countLiveCells(Set<Coordinate> coordinates, String[][] generation) {
         int countOfLiveCells = 0;
-        for(Coordinate coordinate : coordinates) {
-            if(isLiveCell(generation[coordinate.getX()][coordinate.getY()])) {
+        for (Coordinate coordinate : coordinates) {
+            if (isLiveCell(generation[coordinate.getX()][coordinate.getY()])) {
                 countOfLiveCells++;
             }
         }
@@ -133,6 +153,23 @@ public class GameOfLife {
         return countOfLiveCells < 3;
     }
 
+    private boolean isTooSmallWorld(String[][] generation) {
+        if(generation.length < 3 || generation[0].length < 3) {
+            return true;
+        }
+        return false;
+    }
+
+    private String[][] getEmptyNewGeneration(String[][] oldGeneration) {
+        String[][] newGeneration = new String[oldGeneration.length][oldGeneration[0].length];
+        for (int x = 0; x < newGeneration.length; x++) {
+            for(int y = 0; y < newGeneration[0].length; y++) {
+                newGeneration[x][y] = ".";
+            }
+        }
+        return newGeneration;
+    }
+
     private class Coordinate {
         private final int x;
         private final int y;
@@ -167,5 +204,8 @@ public class GameOfLife {
     }
 
     public class Extinction extends Exception {
+    }
+
+    public class TooSmallWorld extends Exception {
     }
 }
