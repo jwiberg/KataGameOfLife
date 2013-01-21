@@ -25,7 +25,12 @@ public class GameOfLife {
         checkDownSide(oldGeneration, newGeneration);
         checkLeftSide(oldGeneration, newGeneration);
         checkRightSide(oldGeneration, newGeneration);
+        checkMiddle(oldGeneration, newGeneration);
 
+        return newGeneration;
+    }
+
+    private void checkMiddle(String[][] oldGeneration, String[][] newGeneration) {
         for (int x = 1; x < oldGeneration.length -1; x++) {
             for (int y = 1; y < oldGeneration[x].length - 1; y++) {
                     Set<Coordinate> coordinates = new HashSet<>();
@@ -41,8 +46,6 @@ public class GameOfLife {
                     newGeneration[x][y] = getLiveOrDeadCell(liveCells, oldGeneration[x][y]);
             }
         }
-
-        return newGeneration;
     }
 
     private void checkRightSide(String[][] oldGeneration, String[][] newGeneration) {
