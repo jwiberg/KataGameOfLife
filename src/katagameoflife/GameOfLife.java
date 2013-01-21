@@ -14,17 +14,16 @@ public class GameOfLife {
         if (isTooSmallWorld(oldGeneration)) {
             throw new TooSmallWorld();
         }
-
         if (isExtinction(oldGeneration)) {
             throw new Extinction();
         }
 
-        //Pitääkö tuo uusi generaatio luoda tuolla metodin sisällä?
         String[][] newGeneration = getEmptyNewGeneration(oldGeneration);
 
         checkCorners(oldGeneration, newGeneration);
         checkTopSide(oldGeneration, newGeneration);
         checkDownSide(oldGeneration, newGeneration);
+        checkLeftSide(oldGeneration, newGeneration);
 
 
         for (int x = 0; x < oldGeneration.length; x++) {
@@ -36,6 +35,19 @@ public class GameOfLife {
         }
 
         return newGeneration;
+    }
+
+    private void checkLeftSide(String[][] oldGeneration, String[][] newGeneration) {
+        for (int y = 1; y < newGeneration[0].length - 1; y++) {
+            Set<Coordinate> coordinates = new HashSet<>();
+            coordinates.add(new Coordinate(0, y - 1));
+            coordinates.add(new Coordinate(1, y - 1));
+            coordinates.add(new Coordinate(1, y));
+            coordinates.add(new Coordinate(1, y + 1));
+            coordinates.add(new Coordinate(0, y + 1));
+            int liveCells = countLiveCells(coordinates, oldGeneration);
+            newGeneration[0][y] = getLiveOrDeadCell(liveCells, oldGeneration[0][y]);
+        }
     }
 
     private void checkTopSide(String[][] oldGeneration, String[][] newGeneration) {

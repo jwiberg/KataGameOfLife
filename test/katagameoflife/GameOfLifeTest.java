@@ -135,16 +135,39 @@ public class GameOfLifeTest {
     }
 
     @Test
-    public void liveCellAtMiddleOfDwonSideShouldLiveWithTwoNeighbours() throws Exception {
-        String[][] oldGeneration = {{".", ".", ".", ".", "."}
-                , {"*", ".", ".", ".", "*"}
-                , {"*", ".", ".", ".", "*"}
-                , {"*", ".", ".", ".", "*"}
-                , {".", ".", ".", ".", "."}};
+    public void liveCellAtMiddleOfDownSideShouldDieWithOneNeighbour() throws Exception {
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellAtMiddleOfDownSideShouldDieWithOneNeighbour", 5, TESTDATA_FILE_PATH);
+        visualize(oldGeneration);
+        String[][] newGeneration = generateNextGeneration(oldGeneration);
+        visualize(newGeneration);
+        assertEquals(".", newGeneration[2][4]);
+    }
+
+    @Test
+    public void liveCellAtMiddleOfDownSideShouldLiveWithTwoNeighbours() throws Exception {
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellAtMiddleOfDownSideShouldLiveWithTwoNeighbours", 5, TESTDATA_FILE_PATH);
         visualize(oldGeneration);
         String[][] newGeneration = generateNextGeneration(oldGeneration);
         visualize(newGeneration);
         assertEquals("*", newGeneration[2][4]);
+    }
+
+    @Test
+    public void liveCellAtMiddleOfLeftSideShouldLiveWithTwoNeighbours() throws Exception {
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellAtMiddleOfLeftSideShouldLiveWithTwoNeighbours", 5, TESTDATA_FILE_PATH);
+        visualize(oldGeneration);
+        String[][] newGeneration = generateNextGeneration(oldGeneration);
+        visualize(newGeneration);
+        assertEquals("*", newGeneration[0][2]);
+    }
+
+    @Test
+    public void liveCellAtMiddleOfLeftSideShouldDieWithOneNeighbours() throws Exception {
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("liveCellAtMiddleOfLeftSideShouldDieWithOneNeighbours", 5, TESTDATA_FILE_PATH);
+        visualize(oldGeneration);
+        String[][] newGeneration = generateNextGeneration(oldGeneration);
+        visualize(newGeneration);
+        assertEquals(".", newGeneration[0][2]);
     }
 
     private String[][] generateNextGeneration(String[][] oldGeneration) throws Exception {
