@@ -203,6 +203,17 @@ public class GameOfLifeTest {
         assertEquals("*", newGeneration[3][4]);
     }
 
+    @Test
+    public void testBlinker() throws Exception {
+        String[][] oldGeneration = TestDataReader.readTestGenerationByTestName("testBlinker", 5, TESTDATA_FILE_PATH);
+        visualize(oldGeneration);
+        String[][] newGeneration = generateNextGeneration(oldGeneration);
+        visualize(newGeneration);
+        assertEquals("*", newGeneration[1][2]);
+        assertEquals("*", newGeneration[2][2]);
+        assertEquals("*", newGeneration[3][2]);
+    }
+
     private String[][] generateNextGeneration(String[][] oldGeneration) throws Exception {
         return new GameOfLife().generateNextGeneration(oldGeneration);
     }
